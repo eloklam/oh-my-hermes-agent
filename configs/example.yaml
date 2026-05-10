@@ -5,6 +5,12 @@ project:
   name: oh-my-hermes-agent
   purpose: Documented profile and Kanban configuration for Hermes Agent
   runtime: hermes
+  not_a:
+    - CLI
+    - Python package
+    - Hermes plugin
+    - external plugin loader
+    - wrapper runtime
 
 roles:
   default:
@@ -18,6 +24,7 @@ roles:
       service_tier: fast
       reasoning_effort: medium
     notes:
+      - gpt-5.5-fast is rejected by the ChatGPT Codex account, so use gpt-5.5.
       - source design gpt-5.5-fast maps to Hermes gpt-5.5 plus agent.service_tier=fast.
       - Orchestrator policy belongs in ~/.hermes/AGENTS.md.
 
