@@ -196,6 +196,8 @@ hermes kanban --board oh-my-hermes-agent dispatch
 
 To prevent avoidable cost and poor UX during multi-profile Kanban execution:
 
+我而家 checkpoint 先，唔會長時間 foreground loop 燒住等。
+
 1. **No long blocking polling loops** — The orchestrator must never run long foreground wait/poll loops that prevent replying to the user. Use `kanban_heartbeat` every few minutes for genuinely long operations, and keep the user updated instead of blocking silently.
 2. **Checkpoint after each meaningful batch or blocker** — After each batch of work or any high-risk blocker, stop and give a status checkpoint instead of silently continuing the entire task graph.
 3. **No auto-cascade of oracle/GPT review after blockers** — Do not automatically spawn oracle or GPT review follow-ups after a blocker resolves. Ask the user or give a checkpoint first, unless they explicitly told you to fully auto-run and accepted the cost.
