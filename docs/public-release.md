@@ -51,7 +51,8 @@ git reset --soft "$ROOT_COMMIT"
 
 # 3. Amend the root commit so it absorbs all changes into a single commit
 #    with no parent history beyond the (now amended) root.
-git commit --amend -m "docs: initial public release (squashed)"
+#    Use --reset-author so the squashed commit does not inherit legacy identity metadata.
+git commit --amend --reset-author -m "docs: initial public release (squashed)"
 
 # 4. Push as a new branch
 git push -u origin public-release-squash
@@ -95,4 +96,4 @@ All of the above must return zero unexpected hits before publishing.
 
 ## Recommended default branch on GitHub
 
-After pushing a clean branch, set it as the default in GitHub settings and delete the old `master` branch from the remote. This ensures visitors see only the clean history and cannot reach the old commits.
+After pushing a clean branch, set it as the default in GitHub settings and delete the old `master` branch from the remote. This limits what visitors see by default, but it does not guarantee old commits are completely unreachable: cached SHAs, forks, pull-request references, and tags can still expose prior history. If you need stronger privacy guarantees, review and remove any tags pointing to old commits and consider contacting GitHub Support for cache clearing.
