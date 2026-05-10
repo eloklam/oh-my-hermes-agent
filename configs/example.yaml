@@ -1,0 +1,274 @@
+# Example only. Do not paste API keys into this file.
+# Copy values you need into your Hermes config and ~/.hermes/.env.
+
+project:
+  name: oh-my-hermes-agent
+  purpose: Documented profile and Kanban configuration for Hermes Agent
+  runtime: hermes
+  not_a:
+    - CLI
+    - Python package
+    - Hermes plugin
+    - external plugin loader
+    - wrapper runtime
+
+roles:
+  default:
+    omh_role: orchestrator
+    hermes_profile: default
+    purpose: strategic coordinator and delegator
+    model:
+      provider: openai-codex
+      default: gpt-5.5
+    agent:
+      service_tier: fast
+      reasoning_effort: medium
+    notes:
+      - gpt-5.5-fast is rejected by the ChatGPT Codex account, so use gpt-5.5.
+      - source design gpt-5.5-fast maps to Hermes gpt-5.5 plus agent.service_tier=fast.
+      - Orchestrator policy belongs in ~/.hermes/AGENTS.md.
+
+  oracle:
+    omh_role: oracle
+    hermes_profile: oracle
+    purpose: deep reasoning, adversarial review, architecture critique, code review
+    model:
+      provider: openai-codex
+      default: gpt-5.5
+    agent:
+      service_tier: fast
+      reasoning_effort: xhigh
+
+  explorer:
+    omh_role: explorer
+    hermes_profile: explorer
+    purpose: broad codebase exploration and unknown discovery
+    model:
+      provider: custom:fireworks-ai
+      default: accounts/fireworks/routers/kimi-k2p6-turbo
+    agent:
+      service_tier: fast
+      reasoning_effort: medium
+    variant_mapping: source design variant=thinking maps to Hermes reasoning_effort=medium for Kimi/K2P6.
+
+  librarian:
+    omh_role: librarian
+    hermes_profile: librarian
+    purpose: source-grounded docs and repo evidence
+    model:
+      provider: custom:fireworks-ai
+      default: accounts/fireworks/routers/kimi-k2p6-turbo
+    agent:
+      service_tier: fast
+      reasoning_effort: medium
+    variant_mapping: source design variant=thinking maps to Hermes reasoning_effort=medium for Kimi/K2P6.
+
+  designer:
+    omh_role: designer
+    hermes_profile: designer
+    purpose: UI, visual design, UX critique
+    model:
+      provider: custom:fireworks-ai
+      default: accounts/fireworks/routers/kimi-k2p6-turbo
+    agent:
+      service_tier: fast
+      reasoning_effort: medium
+    variant_mapping: source design variant=thinking maps to Hermes reasoning_effort=medium for Kimi/K2P6.
+
+  fixer:
+    omh_role: fixer
+    hermes_profile: fixer
+    purpose: bounded implementation, bug fixing, tests
+    model:
+      provider: custom:fireworks-ai
+      default: accounts/fireworks/routers/kimi-k2p6-turbo
+    agent:
+      service_tier: fast
+      reasoning_effort: medium
+    variant_mapping: source design variant=thinking maps to Hermes reasoning_effort=medium for Kimi/K2P6.
+
+  council:
+    omh_role: council
+    hermes_profile: council
+    purpose: multi-model consensus
+    model:
+      provider: openai-codex
+      default: gpt-5.5
+    agent:
+      service_tier: fast
+      reasoning_effort: medium
+    notes:
+      - Use the council profile through Hermes Kanban batch/consensus tasks.
+      - source design council uses gpt-5.5-fast; Hermes maps that to gpt-5.5 plus service_tier=fast.
+      - delegate_task is disabled in this OMH setup.
+
+  observer:
+    omh_role: observer
+    hermes_profile: observer
+    purpose: visual analysis for images, PDFs, and screenshots
+    model:
+      provider: custom:fireworks-ai
+      default: accounts/fireworks/routers/kimi-k2p6-turbo
+    agent:
+      service_tier: fast
+      reasoning_effort: medium
+    notes:
+      - source design disables observer, but this Hermes setup keeps observer active on K2P6 for vision/read-only work.
+      - delegate_task is disabled in this OMH setup.
+
+  casual:
+    omh_role: none
+    hermes_profile: casual
+    purpose: fast chat buddy for facts and casual conversation
+    model:
+      provider: custom:fireworks-ai
+      default: accounts/fireworks/routers/kimi-k2p6-turbo
+    agent:
+      service_tier: fast
+      reasoning_effort: medium
+    notes:
+      - Not part of the serious OMH worker delegation workflow.
+      - Delegation toolset may remain enabled; this profile is for informal quick chat only.
+
+providers:
+  fireworks-ai:
+    hermes_provider: custom:fireworks-ai
+    base_url: https://api.fireworks.ai/inference/v1
+    key_env: FIREWORKS_AI_API_KEY
+    default_model: accounts/fireworks/routers/kimi-k2p6-turbo
+    secret_location: ~/.hermes/.env
+
+model_variant_mapping:
+  source: known_good_example
+  openai_fast: source design model suffix "-fast" maps to Hermes model gpt-5.5 with agent.service_tier=fast.
+  oracle_xhigh: source design oracle variant=xhigh maps to Hermes agent.reasoning_effort=xhigh.
+  kimi_thinking: source design K2P6 variant=thinking maps to Hermes agent.reasoning_effort=medium, which makes Hermes send reasoning_effort to Kimi-compatible providers.
+  observer: source design disables observer, but this Hermes setup keeps observer active on K2P6 for vision/read-only work.
+
+skills:
+  imported_to: ~/.hermes/skills/omh-imports/
+  rule: Copy compatible skills into Hermes skills. Do not depend on external runtime paths.
+
+kanban:
+  board: oh-my-hermes-agent
+  dispatch: hermes kanban --board oh-my-hermes-agent dispatch
+  policy: named-profile delegation uses Kanban only; delegate_task/delegation toolset is disabled for all OMH profiles.
+  no_self_execution_policy: |
+    The default orchestrator must not implement non-trivial work itself.
+    It is a delegator, not an executor.
+    Work that must be delegated via Kanban:
+      - GitHub PR and issue workflows
+      - Repository edits, file creation, or code changes
+      - Implementation, bug fixes, or tests
+      - Research, documentation, or evidence gathering
+      - Architecture or security review
+      - Config or profile changes
+    Work the orchestrator may handle directly:
+      - Simple factual replies and quick lookups
+      - Tiny edits (single-line typos, trivial corrections)
+      - Direct checks and verification commands
+      - Clarification questions to the user
+  wrong_vs_correct:
+    wrong_description: |
+      Orchestrator does everything in one turn:
+      creates issue, writes fix, commits, opens PR, self-reviews, merges.
+    correct_description: |
+      Parallel Kanban cards with real profiles:
+        - fixer task for the skill, doc, or code change
+        - explorer/librarian tasks in parallel for validation and references
+        - oracle task as a dependent child for adversarial review
+  stalled_worker_recovery:
+    rule: Do not silently finish stalled worker work yourself.
+    recovery_options:
+      - Reclaim the task so the dispatcher can retry it with the same or narrower scope.
+      - Reassign to a different profile if the original profile is misconfigured.
+      - Create a follow-up child task for the remaining work.
+      - Block the task and ask the user for a decision if the stall reason is ambiguous.
+    example_command: hermes kanban --board oh-my-hermes-agent reclaim <task_id>
+  decomposition_policy: |
+    The default orchestrator must decompose non-trivial requests into independent workstreams before creating Kanban tasks.
+    Do not bundle multiple independent lanes into a single fixer task.
+    Example workstreams:
+      - UI design + implementation -> designer (parallel) + fixer (depends on designer)
+      - Fix blockers + check model variants -> fixer (parallel) + explorer/librarian (parallel)
+      - Optional adversarial review -> oracle as a dependent child after fixer completes
+  parallel_examples:
+    - description: Build a feature with UI
+      tasks:
+        - assignee: designer
+          title: "Design UI for feature X"
+          workspace: dir:/repo
+        - assignee: fixer
+          title: "Implement feature X"
+          workspace: dir:/repo
+          parents: [designer_task]
+    - description: Fix blockers and research alternatives
+      tasks:
+        - assignee: fixer
+          title: "Fix blocker Y"
+          workspace: dir:/repo
+        - assignee: explorer
+          title: "Check model variants"
+          workspace: dir:/repo
+        - assignee: librarian
+          title: "Collect source-grounded evidence"
+          workspace: dir:/repo
+    - description: Optional review after implementation
+      tasks:
+        - assignee: fixer
+          title: "Implement bounded changes"
+          workspace: dir:/repo
+        - assignee: oracle
+          title: "Adversarial review"
+          workspace: dir:/repo
+          parents: [fixer_task]
+  dependency_shape: |
+    explorer   ─╢
+                ─╮> fixer ─> oracle
+    librarian ─╯
+  example_create_and_link:
+    - |
+      EXP=$(hermes kanban --board oh-my-hermes-agent create "Explore implementation surface" --assignee explorer --workspace dir:/repo --json | jq -r '.id')
+      LIB=$(hermes kanban --board oh-my-hermes-agent create "Collect source-grounded references" --assignee librarian --workspace dir:/repo --json | jq -r '.id')
+      FIX=$(hermes kanban --board oh-my-hermes-agent create "Implement bounded changes" --assignee fixer --workspace dir:/repo --json | jq -r '.id')
+      ORA=$(hermes kanban --board oh-my-hermes-agent create "Final adversarial review" --assignee oracle --workspace dir:/repo --json | jq -r '.id')
+
+      # Link: explorer and librarian parent fixer; fixer parents oracle
+      hermes kanban --board oh-my-hermes-agent link "$EXP" "$FIX"
+      hermes kanban --board oh-my-hermes-agent link "$LIB" "$FIX"
+      hermes kanban --board oh-my-hermes-agent link "$FIX" "$ORA"
+
+      hermes kanban --board oh-my-hermes-agent dispatch
+  durable_swarm_mapping:
+    explorer: discover files, risks, options, unknowns
+    librarian: collect docs and evidence
+    fixer: implement bounded changes after discovery
+    oracle: final adversarial review
+    designer: UI/UX review when needed
+    council: multi-model consensus when needed
+    observer: visual analysis when needed
+    casual: fast chat buddy, not part of serious workflow
+
+setup:
+  disable_delegation:
+    description: Disable delegate_task for every OMH profile
+    commands:
+      - hermes --profile default  tools disable delegation
+      - hermes --profile fixer    tools disable delegation
+      - hermes --profile explorer tools disable delegation
+      - hermes --profile librarian tools disable delegation
+      - hermes --profile designer tools disable delegation
+      - hermes --profile oracle   tools disable delegation
+      - hermes --profile observer tools disable delegation
+      - hermes --profile council  tools disable delegation
+  verify:
+    description: Confirm delegation is unavailable in a profile
+    command: hermes --profile fixer tools list | grep delegation
+    expected: a disabled delegation line, e.g. "✗ disabled  delegation"
+
+deliberately_not_included:
+  - external JavaScript plugin hooks
+  - external memory plugin
+  - delegate_task as an OMH delegation path
+  - standalone CLI commands
+  - wrapper runtime
