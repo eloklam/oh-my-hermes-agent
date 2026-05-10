@@ -45,11 +45,11 @@ roles:
     purpose: broad codebase exploration and unknown discovery
     model:
       provider: custom:fireworks-ai
-      default: accounts/fireworks/routers/kimi-k2p6-turbo
+      default: <your-worker-model>
     agent:
       service_tier: fast
       reasoning_effort: medium
-    variant_mapping: source design variant=thinking maps to Hermes reasoning_effort=medium for Kimi/K2P6.
+    variant_mapping: source design variant=thinking maps to Hermes reasoning_effort=medium for thinking-compatible providers.
 
   librarian:
     omh_role: librarian
@@ -57,11 +57,11 @@ roles:
     purpose: source-grounded docs and repo evidence
     model:
       provider: custom:fireworks-ai
-      default: accounts/fireworks/routers/kimi-k2p6-turbo
+      default: <your-worker-model>
     agent:
       service_tier: fast
       reasoning_effort: medium
-    variant_mapping: source design variant=thinking maps to Hermes reasoning_effort=medium for Kimi/K2P6.
+    variant_mapping: source design variant=thinking maps to Hermes reasoning_effort=medium for thinking-compatible providers.
 
   designer:
     omh_role: designer
@@ -69,11 +69,11 @@ roles:
     purpose: UI, visual design, UX critique
     model:
       provider: custom:fireworks-ai
-      default: accounts/fireworks/routers/kimi-k2p6-turbo
+      default: <your-worker-model>
     agent:
       service_tier: fast
       reasoning_effort: medium
-    variant_mapping: source design variant=thinking maps to Hermes reasoning_effort=medium for Kimi/K2P6.
+    variant_mapping: source design variant=thinking maps to Hermes reasoning_effort=medium for thinking-compatible providers.
 
   fixer:
     omh_role: fixer
@@ -81,11 +81,11 @@ roles:
     purpose: bounded implementation, bug fixing, tests
     model:
       provider: custom:fireworks-ai
-      default: accounts/fireworks/routers/kimi-k2p6-turbo
+      default: <your-worker-model>
     agent:
       service_tier: fast
       reasoning_effort: medium
-    variant_mapping: source design variant=thinking maps to Hermes reasoning_effort=medium for Kimi/K2P6.
+    variant_mapping: source design variant=thinking maps to Hermes reasoning_effort=medium for thinking-compatible providers.
 
   council:
     omh_role: council
@@ -108,12 +108,12 @@ roles:
     purpose: visual analysis for images, PDFs, and screenshots
     model:
       provider: custom:fireworks-ai
-      default: accounts/fireworks/routers/kimi-k2p6-turbo
+      default: <your-worker-model>
     agent:
       service_tier: fast
       reasoning_effort: medium
     notes:
-      - source design disables observer, but this Hermes setup keeps observer active on K2P6 for vision/read-only work.
+      - source design disables observer, but this Hermes setup keeps observer active on the configured worker model for vision/read-only work.
       - delegate_task is disabled in this OMH setup.
 
   casual:
@@ -122,7 +122,7 @@ roles:
     purpose: fast chat buddy for facts and casual conversation
     model:
       provider: custom:fireworks-ai
-      default: accounts/fireworks/routers/kimi-k2p6-turbo
+      default: <your-worker-model>
     agent:
       service_tier: fast
       reasoning_effort: medium
@@ -135,15 +135,15 @@ providers:
     hermes_provider: custom:fireworks-ai
     base_url: https://api.fireworks.ai/inference/v1
     key_env: FIREWORKS_AI_API_KEY
-    default_model: accounts/fireworks/routers/kimi-k2p6-turbo
+    default_model: <your-worker-model>
     secret_location: ~/.hermes/.env
 
 model_variant_mapping:
   source: known_good_example
   openai_fast: source design model suffix "-fast" maps to Hermes model gpt-5.5 with agent.service_tier=fast.
   oracle_xhigh: source design oracle variant=xhigh maps to Hermes agent.reasoning_effort=xhigh.
-  kimi_thinking: source design K2P6 variant=thinking maps to Hermes agent.reasoning_effort=medium, which makes Hermes send reasoning_effort to Kimi-compatible providers.
-  observer: source design disables observer, but this Hermes setup keeps observer active on K2P6 for vision/read-only work.
+  worker_thinking: source design variant=thinking maps to Hermes agent.reasoning_effort=medium, which makes Hermes send reasoning_effort to thinking-compatible providers.
+  observer: source design disables observer, but this Hermes setup keeps observer active on the configured worker model for vision/read-only work.
 
 skills:
   imported_to: ~/.hermes/skills/omh-imports/

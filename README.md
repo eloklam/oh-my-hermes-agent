@@ -60,8 +60,8 @@ provider: openai-codex
 model: gpt-5.5
 
 # Workers
-provider: custom:fireworks-ai
-model: accounts/fireworks/routers/kimi-k2p6-turbo
+provider: custom:<your-provider>
+model: <your-worker-model>
 
 # Oracle / council
 provider: openai-codex

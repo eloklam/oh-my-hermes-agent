@@ -102,7 +102,7 @@ This table shows how external source provider prefixes map to Hermes providers. 
 | `anthropic/` | `anthropic` |
 | `google/` | `google` |
 | `fireworks-ai/` | `custom:fireworks-ai` |
-| `kimi/` | `custom:kimi` |
+| `<your-provider>/` | `custom:<your-provider>` |
 | `reference-go/` | `custom:reference-go` |
 | `cerebras/` | `custom:cerebras` |
 | `deepseek/` | `custom:deepseek` |
@@ -132,8 +132,8 @@ Worker profiles (explorer, librarian, designer, fixer, observer):
 
 ```yaml
 model:
-  provider: custom:fireworks-ai
-  default: accounts/fireworks/routers/kimi-k2p6-turbo
+  provider: custom:<your-provider>
+  default: <your-worker-model>
 ```
 
 Oracle and council:
@@ -150,8 +150,8 @@ Casual (not part of OMH worker delegation):
 
 ```yaml
 model:
-  provider: custom:fireworks-ai
-  default: accounts/fireworks/routers/kimi-k2p6-turbo
+  provider: custom:<your-provider>
+  default: <your-worker-model>
 agent:
   service_tier: fast
   reasoning_effort: medium
@@ -162,25 +162,25 @@ Source design variant mapping:
 ```text
 orchestrator openai/gpt-5.5-fast      -> Hermes gpt-5.5 + service_tier=fast
 oracle openai/gpt-5.5-fast xhigh      -> Hermes gpt-5.5 + service_tier=fast + reasoning_effort=xhigh
-explorer/librarian/designer/fixer K2P6 thinking -> Hermes K2P6 + reasoning_effort=medium
+explorer/librarian/designer/fixer thinking -> Hermes <your-worker-model> + reasoning_effort=medium
 council openai/gpt-5.5-fast           -> Hermes gpt-5.5 + service_tier=fast
-observer disabled in source design    -> Hermes observer active on K2P6
+observer disabled in source design    -> Hermes observer active on the configured worker model
 ```
 
 Custom provider:
 
 ```yaml
 providers:
-  fireworks-ai:
-    base_url: https://api.fireworks.ai/inference/v1
-    key_env: FIREWORKS_AI_API_KEY
-    default_model: accounts/fireworks/routers/kimi-k2p6-turbo
+  <your-provider>:
+    base_url: https://api.<your-provider>.com/v1
+    key_env: YOUR_PROVIDER_API_KEY
+    default_model: <your-worker-model>
 ```
 
 Secret:
 
 ```text
-FIREWORKS_AI_API_KEY=...
+YOUR_PROVIDER_API_KEY=...
 ```
 
 stored in:
