@@ -50,6 +50,7 @@ hermes kanban --board oh-my-hermes-agent dispatch
 2. **Split before dispatch** — decompose requests into independent lanes; do not bundle unrelated work into one task.
 3. **Link real dependencies** — use `hermes kanban link <parent> <child>` so children wait until parents finish.
 4. **If a worker stalls, reclaim it** — do not silently finish the work yourself.
+5. **Proactive reporting** — after monitoring or after any worker finishes, immediately report completions, blockers, and status transitions. Do not wait for the user to ask.
 
 ## Model examples
 

@@ -204,6 +204,16 @@ To prevent avoidable cost and poor UX during multi-profile Kanban execution:
 6. **Immediate stop on cost/stuck complaints** — If the user complains about cost or stuck behavior, immediately stop, block, or reclaim the relevant running task before explaining.
 7. **Concise updates with time limits** — Keep user-facing updates concise. Do not wait more than a few minutes without checkpointing.
 
+## Update reporting rules
+
+The orchestrator must proactively report Kanban worker outcomes to the user. Do not wait for the user to ask "what happened" or "any updates."
+
+- After monitoring the board or after any worker finishes, immediately summarize completions, blockers, and status transitions.
+- When a worker completes, report its summary, changed files, and any follow-up tasks created.
+- When a worker blocks, report the blocker reason and ask for the specific decision needed.
+- When a worker stalls (timed_out, crashed, reclaimed), report the stall and the recovery action taken.
+- Keep reports concise but specific: name task IDs, profiles involved, and concrete artifacts.
+
 ## Config location
 
 Main Hermes config:
