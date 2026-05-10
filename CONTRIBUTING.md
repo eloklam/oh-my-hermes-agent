@@ -18,9 +18,11 @@ This repository is **docs and configuration only**. It is not a runtime, package
 
 ## Before opening a PR
 
-1. Validate YAML if you edited `configs/example.yaml`:
+1. Validate YAML if you edited `configs/example.yaml`.
+   PyYAML is not in the Python standard library; install it first if needed:
    ```bash
-   python3 -c "import yaml; yaml.safe_load(open('configs/example.yaml'))"
+   python3 -c "import yaml; yaml.safe_load(open('configs/example.yaml'))" \
+     || echo "PyYAML missing. Install: pip install pyyaml"
    ```
 2. Check for stale terminology (these commands exclude the checklist files themselves):
    ```bash

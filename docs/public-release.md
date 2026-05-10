@@ -26,15 +26,17 @@ git commit -m "docs: initial public release"
 git push -u origin public-release
 
 # 6. In GitHub repository settings, set public-release as the default branch
-#    before making the repo public. Keep master private or delete it later
-#    only after confirming everything is correct.
+#    before making the repo public. After confirming everything is correct,
+#    delete the `master` branch from the remote; GitHub visibility is
+#    per-repository, not per-branch, so old history remains reachable until
+#    the branch is removed.
 ```
 
-This is fully non-destructive: `master` remains in the repository unchanged.
+This is fully non-destructive: the local `master` branch remains in your repository unchanged.
 
 ## Option B: squash all history into a single commit on a new branch
 
-If you prefer one commit but want to keep `master` intact:
+If you prefer one commit but want to keep the local `master` intact:
 
 ```bash
 cd /path/to/oh-my-hermes-agent
@@ -42,18 +44,20 @@ cd /path/to/oh-my-hermes-agent
 # 1. Create a new branch from current HEAD
 git checkout -b public-release-squash
 
-# 2. Soft-reset to the very first commit, keeping all changes staged
-FIRST_COMMIT=$(git rev-list --max-parents=0 HEAD)
-git reset --soft "$FIRST_COMMIT"
+# 2. Soft-reset to the root commit, keeping all changes staged.
+#    If your history has multiple root commits, this selects the first one.
+ROOT_COMMIT=$(git rev-list --max-parents=0 HEAD | head -n 1)
+git reset --soft "$ROOT_COMMIT"
 
-# 3. Re-commit everything as one clean commit
-git commit -m "docs: initial public release (squashed)"
+# 3. Amend the root commit so it absorbs all changes into a single commit
+#    with no parent history beyond the (now amended) root.
+git commit --amend -m "docs: initial public release (squashed)"
 
 # 4. Push as a new branch
 git push -u origin public-release-squash
 ```
 
-Caution: This changes commit SHAs on the new branch, but `master` is untouched.
+Caution: This rewrites the root commit SHA on the new branch, but the local `master` is untouched.
 
 ## Option C: reinitialize as a fresh repo (destructive to local history only)
 
@@ -65,14 +69,16 @@ cd /path/to/oh-my-hermes-agent
 # Back up the old .git just in case
 cp -a .git .git.backup
 
-# Reinitialize
+# Remove existing Git metadata and reinitialize
+rm -rf .git
 git init
 git add -A
 git commit -m "docs: initial public release"
 
-# Add GitHub remote and push as a new branch
+# Add (or replace) GitHub remote and push the current branch
+git remote remove origin 2>/dev/null || true
 git remote add origin https://github.com/YOURUSER/oh-my-hermes-agent.git
-git push -u origin master
+git push -u origin HEAD
 ```
 
 **Warning:** This destroys all local commit history. Only use if you have no need for the old history and have backed up `.git`.
@@ -89,4 +95,4 @@ All of the above must return zero unexpected hits before publishing.
 
 ## Recommended default branch on GitHub
 
-After pushing a clean branch, set it as the default in GitHub settings and keep `master` unlisted or archive it. This ensures visitors see only the clean history.
+After pushing a clean branch, set it as the default in GitHub settings and delete the old `master` branch from the remote. This ensures visitors see only the clean history and cannot reach the old commits.
