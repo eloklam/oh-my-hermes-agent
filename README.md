@@ -1,6 +1,6 @@
 # Oh My Hermes Agent
 
-> Formerly called **OMO-slim** — a lightweight multi-profile Hermes Agent workflow.
+> A port and improvement from [https://github.com/alvinunreal/oh-my-opencode-slim]([url](https://github.com/alvinunreal/oh-my-opencode-slim))
 
 This repo documents how to run named-profile Kanban delegation in Hermes Agent.
 
