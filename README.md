@@ -2,7 +2,7 @@
 
 A public profile and Kanban configuration pattern for running a lightweight multi-profile Hermes Agent workflow.
 
-This repo is intentionally **not** a package, CLI, plugin, or runtime. It is a documented setup and mapping record for Hermes users who want named-profile delegation via Kanban.
+This repo is a documented setup and mapping record for Hermes users who want named-profile delegation via Kanban.
 
 ## What this is
 
@@ -12,23 +12,6 @@ This repo is intentionally **not** a package, CLI, plugin, or runtime. It is a d
 - **Kanban multi-profile workflow mapping** notes
 - **Design references** for attribution and future comparison
 
-## What this is not
-
-No `omh` command.
-
-No `oh-my-hermes-agent` command.
-
-No Python package.
-
-No helper module.
-
-No Hermes plugin.
-
-No second chat UX.
-
-No wrapper runtime.
-
-Hermes is the runtime. This repo is only the setup and mapping record.
 
 ## Profiles
 
