@@ -51,7 +51,7 @@ hermes kanban --board oh-my-hermes-agent dispatch
 3. **Link real dependencies** — use `hermes kanban link <parent> <child>` so children wait until parents finish.
 4. **If a worker stalls, reclaim it** — do not silently finish the work yourself.
 5. **Proactive reporting** — after monitoring or after any worker finishes, immediately report completions, blockers, and status transitions. Do not wait for the user to ask.
-6. **Cost-control and checkpointing** — 我而家 checkpoint 先，唔會長時間 foreground loop 燒住等。See [docs/swarm-design.md](docs/swarm-design.md) for the full rules.
+6. **Cost-control and checkpointing** — checkpoint early, keep updates concise, and never block in long foreground polling loops. See [docs/swarm-design.md](docs/swarm-design.md) for the full rules.
 
 ## Model examples
 

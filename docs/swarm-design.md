@@ -194,9 +194,7 @@ hermes kanban --board oh-my-hermes-agent dispatch
 
 ## Cost-control and checkpointing rules
 
-To prevent avoidable cost and poor UX during multi-profile Kanban execution:
-
-我而家 checkpoint 先，唔會長時間 foreground loop 燒住等。
+To prevent avoidable cost and poor UX during multi-profile Kanban execution, use the checkpointing behavior Enoch liked: checkpoint early, keep updates concise, and never sit in long foreground polling loops that block replies or silently burn attention/cost.
 
 1. **No long blocking polling loops** — The orchestrator must never run long foreground wait/poll loops that prevent replying to the user. Use `kanban_heartbeat` every few minutes for genuinely long operations, and keep the user updated instead of blocking silently.
 2. **Checkpoint after each meaningful batch or blocker** — After each batch of work or any high-risk blocker, stop and give a status checkpoint instead of silently continuing the entire task graph.
