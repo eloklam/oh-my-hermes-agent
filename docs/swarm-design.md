@@ -194,7 +194,7 @@ hermes kanban --board oh-my-hermes-agent dispatch
 
 ## Cost-control and checkpointing rules
 
-To prevent avoidable cost and poor UX during multi-profile Kanban execution, use the checkpointing behavior Enoch liked: checkpoint early, keep updates concise, and never sit in long foreground polling loops that block replies or silently burn attention/cost.
+To prevent avoidable cost and poor UX during multi-profile Kanban execution, use the checkpointing behavior the maintainer preferred: checkpoint early, keep updates concise, and never sit in long foreground polling loops that block replies or silently burn attention/cost.
 
 1. **No long blocking polling loops** — The orchestrator must never run long foreground wait/poll loops that prevent replying to the user. Use `kanban_heartbeat` every few minutes for genuinely long operations, and keep the user updated instead of blocking silently.
 2. **Checkpoint after each meaningful batch or blocker** — After each batch of work or any high-risk blocker, stop and give a status checkpoint instead of silently continuing the entire task graph.
@@ -213,6 +213,42 @@ The orchestrator must proactively report Kanban worker outcomes to the user. Do 
 - When a worker blocks, report the blocker reason and ask for the specific decision needed.
 - When a worker stalls (timed_out, crashed, reclaimed), report the stall and the recovery action taken.
 - Keep reports concise but specific: name task IDs, profiles involved, and concrete artifacts.
+
+## Board lifecycle rules
+
+Kanban boards are durable workspaces. Do not create a new board for every turn, topic, or timestamp.
+
+1. **Reuse the default board** for normal OMH work. The canonical board is `oh-my-hermes-agent`.
+2. **New boards are rare.** Create a separate board only when the work is truly isolated (different tenant, different repo, different team) and the default board would be noisy or risky.
+3. **No per-turn or per-topic timestamp boards.** Timestamped board names make dispatch, linking, and audit impossible. Use stable semantic slugs instead.
+4. **Use tenants for isolation.** If you need namespace isolation, prefer `HERMES_TENANT` over a new board.
+5. **Use task titles and workspaces for scoping.** A task title plus a `dir:` or `worktree` workspace scopes work precisely without spawning new boards.
+6. **Use dependencies for sequencing.** `hermes kanban link <parent> <child>` replaces the need for "stage boards."
+7. **Archive or consolidate completed and temporary boards.** Temporary boards should be cleaned up once their work is merged or abandoned. Completed tasks on a durable board can be archived or left as history.
+
+Correct board hygiene:
+- One primary OMH board per installation.
+- Tenant namespaces for project isolation.
+- Task titles and workspaces for daily scoping.
+- Stable semantic slugs for any additional long-lived boards.
+
+## Session title hygiene
+
+The orchestrator should set a clear, stable session title once the context is clear. A well-named session makes logs, search, and recovery easier.
+
+1. **Set the title automatically and best-effort** once the user's intent is understood.
+2. **Use a stable format** such as:
+   ```
+   YYYY-MM-DD | PROJECT | goal | area
+   ```
+   Examples:
+   - `2026-05-13 | api-service | add rate limiter | backend`
+   - `2026-05-13 | docs | update README | public-site`
+3. **Avoid repeated renaming.** Pick a title early and keep it. If the scope drifts significantly, rename once, not every turn.
+4. **Fallback to reporting a suggested title** if the runtime has no explicit title command. State the suggested title in the response so the user or a wrapper can apply it.
+5. **Do not include sensitive data** in session titles (no API keys, no internal hostnames, no user PII).
+
+If Hermes supports title commands, use them. Otherwise, include the suggested title in your checkpoint or completion report.
 
 ## Config location
 

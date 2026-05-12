@@ -52,6 +52,8 @@ hermes kanban --board oh-my-hermes-agent dispatch
 4. **If a worker stalls, reclaim it** — do not silently finish the work yourself.
 5. **Proactive reporting** — after monitoring or after any worker finishes, immediately report completions, blockers, and status transitions. Do not wait for the user to ask.
 6. **Cost-control and checkpointing** — checkpoint early, keep updates concise, and never block in long foreground polling loops. See [docs/swarm-design.md](docs/swarm-design.md) for the full rules.
+7. **Board lifecycle** — reuse the default board; new boards are rare; no timestamped names; use tenants and workspaces for isolation. See [docs/swarm-design.md](docs/swarm-design.md).
+8. **Session title hygiene** — set a stable title early (`YYYY-MM-DD | PROJECT | goal | area`); avoid repeated renaming. See [docs/swarm-design.md](docs/swarm-design.md).
 
 ## Model examples
 

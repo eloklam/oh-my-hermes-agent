@@ -194,6 +194,17 @@ kanban:
       - When a worker blocks, report the blocker reason and ask for the specific decision needed.
       - When a worker stalls (timed_out, crashed, reclaimed), report the stall and the recovery action taken.
       - Keep reports concise but specific: name task IDs, profiles involved, and concrete artifacts.
+  board_lifecycle_policy: |
+    Reuse the default OMH board for normal work. New boards are rare and require justification.
+    Rules:
+      - Prefer tenants and workspaces over new boards for isolation.
+      - Use stable semantic slugs; no timestamped or per-topic board names.
+      - Archive or consolidate completed or temporary boards.
+  session_title_hygiene: |
+    Once context is clear, set a stable session title using the format:
+      YYYY-MM-DD | PROJECT | goal | area
+    Avoid repeated renaming. If the runtime has no title command, report the suggested title to the user.
+    Do not include sensitive data (API keys, hostnames, PII) in session titles.
   decomposition_policy: |
     The default orchestrator must decompose non-trivial requests into independent workstreams before creating Kanban tasks.
     Do not bundle multiple independent lanes into a single fixer task.
