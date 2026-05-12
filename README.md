@@ -55,21 +55,72 @@ hermes kanban --board oh-my-hermes-agent dispatch
 7. **Board lifecycle** — reuse the default board; new boards are rare; no timestamped names; use tenants and workspaces for isolation. See [docs/swarm-design.md](docs/swarm-design.md).
 8. **Session title hygiene** — set a stable title early (`YYYY-MM-DD | PROJECT | goal | area`); avoid repeated renaming. See [docs/swarm-design.md](docs/swarm-design.md).
 
-## Model examples
+## Suggested model mapping
+
+Inspired by [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim) preset semantics.
+
+| OMH Profile | Tier | Purpose |
+| --- | --- | --- |
+| `default` (orchestrator) | **Top** | Strongest all-around; implements *and* delegates |
+| `oracle` | **Top** | Same model as orchestrator; `reasoning_effort: xhigh` |
+| `explorer` | **Worker** | Cheap/fast scoped discovery |
+| `librarian` | **Worker** | Same cheap model as explorer |
+| `fixer` | **Worker** | Same cheap model as explorer |
+| `designer` | **Creative** | UI/UX judgment; stronger than worker tier |
+| `observer` | **Vision** | Vision-capable; disable if unused |
+| `council` | **Consensus** | Strong synthesis; diversity across models matters |
 
 ```yaml
-# Orchestrator
+# Top tier — default (orchestrator)
 provider: <your-orchestrator-provider>
 model: <your-orchestrator-model>
+agent:
+  service_tier: fast
+  reasoning_effort: medium
 
-# Workers
+# Top tier — oracle (higher reasoning effort)
+provider: <your-orchestrator-provider>
+model: <your-orchestrator-model>
+agent:
+  service_tier: fast
+  reasoning_effort: xhigh
+
+# Worker tier — explorer, librarian, fixer
 provider: <your-worker-provider>
 model: <your-worker-model>
+agent:
+  service_tier: fast
+  reasoning_effort: medium
 
-# Oracle / council
+# Creative tier — designer
+provider: <your-creative-provider>
+model: <your-creative-model>
+agent:
+  service_tier: fast
+  reasoning_effort: medium
+
+# Vision tier — observer (opt-in)
+provider: <your-vision-provider>
+model: <your-vision-model>
+agent:
+  service_tier: fast
+  reasoning_effort: medium
+
+# Consensus tier — council
 provider: <your-review-provider>
 model: <your-review-model>
+agent:
+  service_tier: fast
+  reasoning_effort: medium
 ```
+
+Key take-aways from upstream:
+
+- **Orchestrator is not a lightweight router** — upstream assigns it the same top-tier model as Oracle.
+- **Worker triad shares one cheap model** — explorer, librarian, and fixer all map to the same low-cost tier.
+- **Designer is a distinct tier** — upstream gives it a `medium` variant (not `low`) because UI/UX quality matters.
+- **Observer is opt-in** — upstream disables it by default.
+- **Council value = diversity** — benefit comes from comparing different model perspectives.
 
 See `configs/example.yaml` for a full annotated example.
 
