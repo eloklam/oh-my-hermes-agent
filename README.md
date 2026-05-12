@@ -59,16 +59,16 @@ hermes kanban --board oh-my-hermes-agent dispatch
 
 ```yaml
 # Orchestrator
-provider: openai-codex
-model: gpt-5.5
+provider: <your-orchestrator-provider>
+model: <your-orchestrator-model>
 
 # Workers
-provider: custom:<your-provider>
+provider: <your-worker-provider>
 model: <your-worker-model>
 
 # Oracle / council
-provider: openai-codex
-model: gpt-5.5
+provider: <your-review-provider>
+model: <your-review-model>
 ```
 
 See `configs/example.yaml` for a full annotated example.

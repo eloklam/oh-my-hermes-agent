@@ -18,14 +18,13 @@ roles:
     hermes_profile: default
     purpose: strategic coordinator and delegator
     model:
-      provider: openai-codex
-      default: gpt-5.5
+      provider: <your-orchestrator-provider>
+      default: <your-orchestrator-model>
     agent:
       service_tier: fast
       reasoning_effort: medium
     notes:
-      - gpt-5.5-fast is rejected by the ChatGPT Codex account, so use gpt-5.5.
-      - source design gpt-5.5-fast maps to Hermes gpt-5.5 plus agent.service_tier=fast.
+      - Some provider accounts reject model IDs with a "-fast" suffix; use the base model ID and set agent.service_tier=fast instead.
       - Orchestrator policy belongs in ~/.hermes/AGENTS.md.
 
   oracle:
@@ -33,8 +32,8 @@ roles:
     hermes_profile: oracle
     purpose: deep reasoning, adversarial review, architecture critique, code review
     model:
-      provider: openai-codex
-      default: gpt-5.5
+      provider: <your-review-provider>
+      default: <your-review-model>
     agent:
       service_tier: fast
       reasoning_effort: xhigh
@@ -44,7 +43,7 @@ roles:
     hermes_profile: explorer
     purpose: broad codebase exploration and unknown discovery
     model:
-      provider: custom:fireworks-ai
+      provider: <your-worker-provider>
       default: <your-worker-model>
     agent:
       service_tier: fast
@@ -56,7 +55,7 @@ roles:
     hermes_profile: librarian
     purpose: source-grounded docs and repo evidence
     model:
-      provider: custom:fireworks-ai
+      provider: <your-worker-provider>
       default: <your-worker-model>
     agent:
       service_tier: fast
@@ -68,7 +67,7 @@ roles:
     hermes_profile: designer
     purpose: UI, visual design, UX critique
     model:
-      provider: custom:fireworks-ai
+      provider: <your-worker-provider>
       default: <your-worker-model>
     agent:
       service_tier: fast
@@ -80,7 +79,7 @@ roles:
     hermes_profile: fixer
     purpose: bounded implementation, bug fixing, tests
     model:
-      provider: custom:fireworks-ai
+      provider: <your-worker-provider>
       default: <your-worker-model>
     agent:
       service_tier: fast
@@ -92,14 +91,14 @@ roles:
     hermes_profile: council
     purpose: multi-model consensus
     model:
-      provider: openai-codex
-      default: gpt-5.5
+      provider: <your-review-provider>
+      default: <your-review-model>
     agent:
       service_tier: fast
       reasoning_effort: medium
     notes:
       - Use the council profile through Hermes Kanban batch/consensus tasks.
-      - source design council uses gpt-5.5-fast; Hermes maps that to gpt-5.5 plus service_tier=fast.
+      - source design council uses a fast variant; Hermes maps that to the review model plus service_tier=fast.
       - delegate_task is disabled in this OMH setup.
 
   observer:
@@ -107,7 +106,7 @@ roles:
     hermes_profile: observer
     purpose: visual analysis for images, PDFs, and screenshots
     model:
-      provider: custom:fireworks-ai
+      provider: <your-worker-provider>
       default: <your-worker-model>
     agent:
       service_tier: fast
@@ -121,7 +120,7 @@ roles:
     hermes_profile: casual
     purpose: fast chat buddy for facts and casual conversation
     model:
-      provider: custom:fireworks-ai
+      provider: <your-worker-provider>
       default: <your-worker-model>
     agent:
       service_tier: fast
@@ -131,16 +130,16 @@ roles:
       - Delegation toolset may remain enabled; this profile is for informal quick chat only.
 
 providers:
-  fireworks-ai:
-    hermes_provider: custom:fireworks-ai
-    base_url: https://api.fireworks.ai/inference/v1
-    key_env: FIREWORKS_AI_API_KEY
+  <your-provider>:
+    hermes_provider: <your-worker-provider>
+    base_url: <provider-api-base-url>
+    key_env: <PROVIDER_API_KEY_ENV>
     default_model: <your-worker-model>
     secret_location: ~/.hermes/.env
 
 model_variant_mapping:
   source: known_good_example
-  openai_fast: source design model suffix "-fast" maps to Hermes model gpt-5.5 with agent.service_tier=fast.
+  orchestrator_fast: source design model suffix "-fast" maps to Hermes orchestrator model with agent.service_tier=fast.
   oracle_xhigh: source design oracle variant=xhigh maps to Hermes agent.reasoning_effort=xhigh.
   worker_thinking: source design variant=thinking maps to Hermes agent.reasoning_effort=medium, which makes Hermes send reasoning_effort to thinking-compatible providers.
   observer: source design disables observer, but this Hermes setup keeps observer active on the configured worker model for vision/read-only work.

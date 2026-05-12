@@ -98,25 +98,17 @@ This table shows how external source provider prefixes map to Hermes providers. 
 
 | External prefix | Hermes provider |
 | --- | --- |
-| `openai/` | `openai-codex` |
-| `anthropic/` | `anthropic` |
-| `google/` | `google` |
-| `fireworks-ai/` | `custom:fireworks-ai` |
 | `<your-provider>/` | `custom:<your-provider>` |
+| `<another-provider>/` | `custom:<another-provider>` |
 | `reference-go/` | `custom:reference-go` |
-| `cerebras/` | `custom:cerebras` |
-| `deepseek/` | `custom:deepseek` |
-| `groq/` | `custom:groq` |
-| `x-ai/` | `custom:x-ai` |
-| `perplexity/` | `custom:perplexity` |
 
 Known compatibility note:
 
 ```text
-openai/gpt-5.5-fast -> openai-codex/gpt-5.5
+<your-provider>/<your-model>-fast -> <your-provider>/<your-model>
 ```
 
-Reason: the ChatGPT Codex account rejects `gpt-5.5-fast`.
+Reason: some provider accounts reject model IDs with a `-fast` suffix; map them to the base model ID and set `agent.service_tier=fast` instead.
 
 ## Current Hermes config state this setup expects
 
@@ -124,15 +116,15 @@ Default profile:
 
 ```yaml
 model:
-  provider: openai-codex
-  default: gpt-5.5
+  provider: <your-orchestrator-provider>
+  default: <your-orchestrator-model>
 ```
 
 Worker profiles (explorer, librarian, designer, fixer, observer):
 
 ```yaml
 model:
-  provider: custom:<your-provider>
+  provider: <your-worker-provider>
   default: <your-worker-model>
 ```
 
@@ -140,8 +132,8 @@ Oracle and council:
 
 ```yaml
 model:
-  provider: openai-codex
-  default: gpt-5.5
+  provider: <your-review-provider>
+  default: <your-review-model>
 agent:
   service_tier: fast
 ```
@@ -150,7 +142,7 @@ Casual (not part of OMH worker delegation):
 
 ```yaml
 model:
-  provider: custom:<your-provider>
+  provider: <your-worker-provider>
   default: <your-worker-model>
 agent:
   service_tier: fast
@@ -160,11 +152,11 @@ agent:
 Source design variant mapping:
 
 ```text
-orchestrator openai/gpt-5.5-fast      -> Hermes gpt-5.5 + service_tier=fast
-oracle openai/gpt-5.5-fast xhigh      -> Hermes gpt-5.5 + service_tier=fast + reasoning_effort=xhigh
-explorer/librarian/designer/fixer thinking -> Hermes <your-worker-model> + reasoning_effort=medium
-council openai/gpt-5.5-fast           -> Hermes gpt-5.5 + service_tier=fast
-observer disabled in source design    -> Hermes observer active on the configured worker model
+orchestrator <your-provider>/<your-model>-fast      -> Hermes <your-orchestrator-model> + service_tier=fast
+oracle <your-review-provider>/<your-review-model> xhigh -> Hermes <your-review-model> + service_tier=fast + reasoning_effort=xhigh
+explorer/librarian/designer/fixer thinking            -> Hermes <your-worker-model> + reasoning_effort=medium
+council <your-review-provider>/<your-review-model>    -> Hermes <your-review-model> + service_tier=fast
+observer disabled in source design                    -> Hermes observer active on the configured worker model
 ```
 
 Custom provider:
@@ -172,15 +164,15 @@ Custom provider:
 ```yaml
 providers:
   <your-provider>:
-    base_url: https://api.<your-provider>.com/v1
-    key_env: YOUR_PROVIDER_API_KEY
+    base_url: <provider-api-base-url>
+    key_env: <PROVIDER_API_KEY_ENV>
     default_model: <your-worker-model>
 ```
 
 Secret:
 
 ```text
-YOUR_PROVIDER_API_KEY=...
+<PROVIDER_API_KEY_ENV>=...
 ```
 
 stored in:
