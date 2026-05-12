@@ -1,6 +1,6 @@
 # Oh My Hermes Agent
 
-> A port and improvement from [https://github.com/alvinunreal/oh-my-opencode-slim]([url](https://github.com/alvinunreal/oh-my-opencode-slim))
+> A port and improvement inspired by [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim).
 
 This repo documents how to run named-profile Kanban delegation in Hermes Agent.
 
