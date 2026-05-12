@@ -114,6 +114,20 @@ agent:
   reasoning_effort: medium
 ```
 
+### Upstream preset examples
+
+These are the actual model strings used by [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim) presets for reference. Replace them with your own provider/model choices; OMH does not endorse any specific vendor.
+
+| Preset | Orchestrator / Default | Oracle | Explorer / Librarian | Designer | Fixer | Observer | Council |
+|--------|------------------------|--------|----------------------|----------|-------|----------|---------|
+| `openai` (default) | `openai/gpt-5.5` | `openai/gpt-5.5` high | `openai/gpt-5.4-mini` low | `openai/gpt-5.4-mini` medium | `openai/gpt-5.4-mini` low | (disabled) | (not preset) |
+| `opencode-go` | `opencode-go/glm-5.1` | `opencode-go/deepseek-v4-pro` max | `opencode-go/minimax-m2.7` | `opencode-go/kimi-k2.6` medium | `opencode-go/deepseek-v4-flash` high | `opencode-go/kimi-k2.6` | `opencode-go/deepseek-v4-pro` high |
+| `copilot` | `github-copilot/claude-opus-4.6` | `github-copilot/claude-opus-4.6` high | `github-copilot/grok-code-fast-1` low | `github-copilot/gemini-3.1-pro-preview` medium | `github-copilot/claude-sonnet-4.6` low | (disabled) | (not preset) |
+| `kimi` | `kimi-for-coding/k2p5` | `kimi-for-coding/k2p5` high | `kimi-for-coding/k2p5` low | `kimi-for-coding/k2p5` medium | `kimi-for-coding/k2p5` low | (disabled) | (not preset) |
+| `zai-plan` | `zai-coding-plan/glm-5` | `zai-coding-plan/glm-5` high | `zai-coding-plan/glm-5` low | `zai-coding-plan/glm-5` medium | `zai-coding-plan/glm-5` low | (disabled) | (not preset) |
+
+> Sources: `src/cli/providers.ts`, `docs/opencode-go-preset.md`, `docs/thirty-dollars-preset.md`, `docs/authors-preset.md`.
+
 Key take-aways from upstream:
 
 - **Orchestrator is not a lightweight router** — upstream assigns it the same top-tier model as Oracle.
