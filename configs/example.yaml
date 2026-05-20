@@ -152,6 +152,10 @@ kanban:
   board: oh-my-hermes-agent
   dispatch: hermes kanban --board oh-my-hermes-agent dispatch
   policy: named-profile delegation uses Kanban only; delegate_task/delegation toolset is disabled for all OMH profiles.
+  cost_control_policy: |
+    Oracle/deep-review remains valid for explicit requests, final or high-risk gates, architecture/debug review, and high-stakes decisions.
+    Normal verification can prefer deterministic local checks or lower-cost worker profiles.
+    After blockers, checkpoint before starting silent repeated expensive review cascades unless the user approved full auto-run and accepted the cost.
   no_self_execution_policy: |
     The default orchestrator must not implement non-trivial work itself.
     It is a delegator, not an executor.
